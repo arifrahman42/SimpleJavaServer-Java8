@@ -3,8 +3,5 @@
         "src"
     ],
     "java.project.outputPath": "bin",
-    "java.project.referencedLibraries": [
-        "lib/servlet-api.jar"
-    ]
-
+    "java.project.referencedLibraries": []
 }

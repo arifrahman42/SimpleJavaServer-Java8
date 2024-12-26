@@ -1,18 +1,9 @@
-## Getting Started
+Pre-requisites:
+- Jetty (for this project, Im using 9.4.0 August 8th 2016 version): https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-distribution/9.4.0.v20161208/jetty-distribution-9.4.0.v20161208.zip
+- Look at the lib folder, what Jetty library I use for this project.
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
-
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+This code are compiled with Visual Studio Code along with Java 8. Before go to compile & run this code:
+- Open Java Project Settings (make sure Java Extension Project is installed);
+- JDK Runtime set to JavaSE-1.8;
+- In compiler tab, uncheck "--release" & "--enable-preview" and set source and target compatibility to 1.8.
+After that, to compile this project, simple press Ctrl+Shift+B, since I already configure everything in tasks.json.

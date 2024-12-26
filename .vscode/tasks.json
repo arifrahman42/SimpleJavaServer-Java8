@@ -1,0 +1,35 @@
+{
+    // See https://code.visualstudio.com/docs/editor/tasks#vscode
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "compile HelloWorldServer",
+        "type": "shell",
+        "command": "javac",
+        "args": [
+          "src/HelloWorldServer.java",
+          "-d", "bin",
+          "-cp", "lib/*"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$javac"],
+        "detail": "Compiles the HelloWorldServer.java file"
+      },
+      {
+        "label": "run HelloWorldServer",
+        "type": "shell",
+        "command": "java",
+        "args": [
+          "-cp",
+          "lib/*;bin",
+          "HelloWorldServer"
+        ],
+        "dependsOn": "compile HelloWorldServer",
+        "group": "build"
+      }
+    ]
+}

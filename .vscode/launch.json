@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "HelloWorldServer",
+            "request": "launch",
+            "mainClass": "HelloWorldServer",
+            "projectName": "SimpleJavaServer-Java8_50b1d4ac"
+        },
+        {
+            "type": "java",
+            "name": "Launch Java Program",
+            "request": "launch",
+            "mainClass": "HelloWorldServer",
+            "projectName": "SimpleJavaServer",
+            "args": [],
+            "vmArgs": "",
+            "env": {},
+            "cwd": "${workspaceFolder}",
+            "classPaths": [
+                "lib/*"
+                ]
+        }
+    ]
+}

@@ -10,7 +10,8 @@
         "args": [
           "src/HelloWorldServer.java",
           "-d", "bin",
-          "-cp", "lib/*"
+          "-cp", "lib/*",
+          "-Xlint:-processing"
         ],
         "group": {
           "kind": "build",

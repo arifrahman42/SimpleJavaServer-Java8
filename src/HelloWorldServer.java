@@ -11,6 +11,7 @@ import java.net.*;
 
 public class HelloWorldServer {
     public static void main(String[] args) throws Exception {
+        // TODO 1: Mengaktifkan peladen.
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
@@ -24,17 +25,21 @@ public class HelloWorldServer {
         server.join();
     }
 
+    // TODO 2: Menyusun method untuk memproses keluaran data.
     public static class HelloWorldServlet extends HttpServlet {
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
             response.setContentType("text/html; charset=UTF-8");
             response.setStatus(HttpServletResponse.SC_OK);
 
+            // TODO 3: Menyetel nama yang akan ditampilkan.
             String myName = "Arif Rahman Habibie";
 
+            // TODO 4: Menyetel format penanggalan Bahasa Indonesia.
             ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Jakarta"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy HH:mm:ss", java.util.Locale.forLanguageTag("id-ID"));
             String formattedDate = now.format(formatter);
 
+            // TODO 5: Menampilkan angka presentase waktu sejak 1 Januari hingga 31 Desember.
             LocalDate today = LocalDate.now();
             int dayOfYear = today.getDayOfYear();
             boolean isLeapYear = today.isLeapYear();
@@ -44,6 +49,7 @@ public class HelloWorldServer {
             int roundedPercentage = (int) percentagePassed;
             int nextYear = today.getYear() + 1;
             
+            // TODO 7: Menampilkan informasi suhu secara daring yang telah diambil dari internet.
             String city = "Medan";
             String apiUrl = "http://api.open-meteo.com/v1/forecast?latitude=3.5833&longitude=98.6667&current=temperature_2m";
             String jsonResponse = fetchDataFromApi(apiUrl);
@@ -56,6 +62,7 @@ public class HelloWorldServer {
             String temperatureUnit = currentUnits.get("temperature_2m").getAsString();
             String gmtTime = current.get("time").getAsString();
             
+            // TODO 8: Menyetel format waktu WIB untuk menampilkan waktu pada informasi suhu udara.
             LocalDateTime gmtDateTime = LocalDateTime.parse(gmtTime);
             LocalDateTime wibDateTime = gmtDateTime.atZone(ZoneId.of("GMT"))
             .withZoneSameInstant(ZoneId.of("Asia/Jakarta"))
@@ -63,6 +70,7 @@ public class HelloWorldServer {
             Date wibDate = Date.from(wibDateTime.atZone(ZoneId.systemDefault()).toInstant());
             String formattedWIBTime = new SimpleDateFormat("HH:mm").format(wibDate) + " WIB";
 
+            // TODO 11: Menampilkan semua informasi yang telah diproses pada file HTML.
             String htmlPath = "resources/index.html";
             String responseContent = loadHtmlTemplate(htmlPath)
             .replace("{{name}}", myName)
@@ -78,6 +86,7 @@ public class HelloWorldServer {
         }
     }
 
+    // TODO 6: Menambahkan method untuk memproses data dari internet.
     private static String fetchDataFromApi (String apiUrl) throws IOException {
         StringBuilder response = new StringBuilder();
         URL url = new URL(apiUrl);
@@ -99,6 +108,7 @@ public class HelloWorldServer {
         return response.toString();
     }
 
+    // TODO 10: Render keluaran sebagai berkas HTML.
     private static String loadHtmlTemplate (String filePath) throws IOException {
         StringBuilder htmlContent = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -110,6 +120,7 @@ public class HelloWorldServer {
         return htmlContent.toString();
     }
 
+    // TODO 13: Menambahkan beberapa methods agar fon Calibri dapat ditampilkan pada perangkat lain.
     public static class FontServlet extends HttpServlet {
         @Override
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

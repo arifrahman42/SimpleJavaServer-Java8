@@ -9,7 +9,6 @@ import javax.servlet.http.*;
 import java.io.*;
 import java.net.*;
 
-
 public class HelloWorldServer {
     public static void main(String[] args) throws Exception {
         Server server = new Server(8080);
@@ -18,6 +17,7 @@ public class HelloWorldServer {
         server.setHandler(context);
 
         context.addServlet(HelloWorldServlet.class, "/");
+        context.addServlet(new ServletHolder(new FontServlet()), "/resources/fonts/*");
         
         server.start();
         System.out.println("Peladen berjalan pada Localhost port 8080");
@@ -26,8 +26,10 @@ public class HelloWorldServer {
 
     public static class HelloWorldServlet extends HttpServlet {
         protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-            response.setContentType("text/plain");
+            response.setContentType("text/html; charset=UTF-8");
             response.setStatus(HttpServletResponse.SC_OK);
+
+            String myName = "Arif Rahman Habibie";
 
             ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Asia/Jakarta"));
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy HH:mm:ss", java.util.Locale.forLanguageTag("id-ID"));
@@ -61,10 +63,18 @@ public class HelloWorldServer {
             Date wibDate = Date.from(wibDateTime.atZone(ZoneId.systemDefault()).toInstant());
             String formattedWIBTime = new SimpleDateFormat("HH:mm").format(wibDate) + " WIB";
 
-            response.getWriter().println("Arif Rahman Habibie");
-            response.getWriter().println(formattedDate);
-            response.getWriter().println(roundedPercentage + "% menuju tahun " + nextYear);
-            response.getWriter().println("Suhu udara di " + city + " saat ini adalah " + temperature + temperatureUnit + ". Terakhir dimutakhirkan pada pukul " + formattedWIBTime);
+            String htmlPath = "resources/index.html";
+            String responseContent = loadHtmlTemplate(htmlPath)
+            .replace("{{name}}", myName)
+            .replace("{{date}}", formattedDate)
+            .replace("{{percentage}}", roundedPercentage + "%")
+            .replace("{{nextYear}}", nextYear + "")
+            .replace("{{city}}", city)
+            .replace("{{temperature}}", String.valueOf(temperature))
+            .replace("{{temperatureUnit}}", temperatureUnit)
+            .replace("{{formattedWIBTime}}", formattedWIBTime);
+
+            response.getWriter().println(responseContent);
         }
     }
 
@@ -86,7 +96,55 @@ public class HelloWorldServer {
                 System.err.println("Terjadi Kesalahan. Pesan Galat: " + e.getMessage());
                 return "{\"current\":{\"temperature_2m\":0,\"time\":\"1970-01-01T00:00\"},\"current_units\":{\"temperature_2m\":\"°C\"}}";
     }
-        
         return response.toString();
     }
+
+    private static String loadHtmlTemplate (String filePath) throws IOException {
+        StringBuilder htmlContent = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                htmlContent.append(line);
+            }
+        }
+        return htmlContent.toString();
+    }
+
+    public static class FontServlet extends HttpServlet {
+        @Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+            String filePath = "resources/fonts" + request.getPathInfo();
+            File file = new File(filePath);
+
+            if (!file.exists() || file.isDirectory()) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                return;
+            }
+            
+            String mimeType = getMimeType(filePath);
+            response.setContentType(mimeType);
+            response.setStatus(HttpServletResponse.SC_OK);
+
+            try (OutputStream os = response.getOutputStream();
+                InputStream is = new FileInputStream(file)) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, bytesRead);
+                }}
+        }
+
+        public static String getMimeType(String filePath) {
+            if (filePath.endsWith(".ttf")) {
+                return "font/ttf";
+            } else if (filePath.endsWith(".woff")) {
+                return "font/woff";
+            } else if (filePath.endsWith(".woff2")) {
+                return "font/woff2";
+            } else {
+                return "application/octet-stream";
+            }
+        }
+    }
+
 }
